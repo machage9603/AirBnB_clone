@@ -1,6 +1,7 @@
 ![hbnb](https://github.com/machage9603/AirBnB_clone/assets/139768288/0fea0a15-e99b-4029-aaf3-84122695c2fa)
 
-# **Air BnB Clone**
+# **Air BnB Clone structure overview**
+![Structure](https://github.com/machage9603/AirBnB_clone/assets/139768288/4bbe8b1c-5258-4e35-8464-de6913bbdb1c)
 
 ## **Project description**
 
