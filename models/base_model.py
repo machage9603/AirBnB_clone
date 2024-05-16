@@ -1,44 +1,44 @@
 #!/usr/bin/python3
 """Defines the BaseModel"""
 
-
 from uuid import uuid4
-from datetime import date, datetime
+from datetime import datetime
 import models
 
-
 class BaseModel:
-    """The super class"""
+    """Defines all common attributes/methods for other classes"""
+
     def __init__(self, *args, **kwargs):
-        """Initializing the base model"""
-        if len(kwargs) != 0:
+        """Initialize a new BaseModel"""
+        if kwargs:
             for key, value in kwargs.items():
-                if key == "__class__":
-                    continue
-                elif key == "created_at" or key == "updated_at":
-                    setattr(self, key, datetime.fromisoformat(value))
-                else:
+                if key == "created_at" or key == "updated_at":
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                if key != "__class__":
                     setattr(self, key, value)
         else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
-            self.updated_at = self.created_at
-            models.storage.new(self)
+            self.updated_at = datetime.now()
 
     def __str__(self):
-        """sets the print behaviour of the base model"""
-        class_name = self.__class__.__name__
-        return "[{}] ({}) {}".format(class_name, self.id, self.__dict__)
+        """Return the print representation of the BaseModel class"""
+        return "[{:s}] ({:s}) {}".format().format(type(self)).__name__, self.id,
 
     def save(self):
-        """updates up_dated with current datetime"""
+        """Update updated_at with current time when instance is changed"""
         self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self):
-        """returns a dictionary containing all key/values of __dict__"""
+        """Return a dictionary containing all keys/values of the instance"""
         new_dict = self.__dict__.copy()
-        new_dict["created_at"] = self.created_at.isoformat()
-        new_dict["updated_at"] = self.updated_at.isoformat()
-        new_dict["__class__"] = self.__class__.__name__
+        new_dict.update({'__class__':
+                        (str(type(self)).split('.')[-1]).split('\'')[0]})
+        new_dict['created_at'] = self.created_at.isoformat()
+        new_dict['updated_at'] = self.updated_at.isoformat()
         return new_dict
+
+    def delete(self):
+        """Delete the current instance from the storage"""
+        models.storage.delete(self) 
