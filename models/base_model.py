@@ -5,6 +5,7 @@ from uuid import uuid4
 from datetime import datetime
 import models
 
+
 class BaseModel:
     """Defines all common attributes/methods for other classes"""
 
@@ -23,7 +24,7 @@ class BaseModel:
 
     def __str__(self):
         """Return the print representation of the BaseModel class"""
-        return "[{:s}] ({:s}) {}".format().format(type(self)).__name__, self.id,
+        return "{} ({})".format(type(self).__name__, self.id)
 
     def save(self):
         """Update updated_at with current time when instance is changed"""
@@ -41,4 +42,4 @@ class BaseModel:
 
     def delete(self):
         """Delete the current instance from the storage"""
-        models.storage.delete(self) 
+        models.storage.delete(self)
