@@ -32,85 +32,58 @@ class HBNBCommand(cmd.Cmd):
         """Handle empty lines."""
         pass
 
-    def do_create(self, arg):
-        """Creates a new instance of BaseModel, saves it and prints the id."""
-        clsname = arg.strip()  # Remove leading/trailing whitespace
-        if not clsname:
-            print('** class name missing **')
-        elif clsname not in self.clslist:
-            print('** class doesn\'t exist **')
+    def do_create(self, class_name):
+        """Creates a new instance of a class and prints its id."""
+        class_name = class_name.strip()
+        if class_name not in self.clslist:
+            print('** class does not exist **')
         else:
-            obj = self.clslist[clsname]()
+            obj = self.clslist[class_name]()
             models.storage.save()
             print(obj.id)
 
-    def do_show(self, arg):
+    def do_show(self, args):
         """Show instance based on id."""
-        clsname, objid = None, None
-        args = arg.split()
-        if len(args) > 0:
-            clsname = args[0].strip()
-        if len(args) > 1:
-            objid = args[1].strip()
-        if not clsname:
-            print('** class name missing **')
-        elif not objid:
-            print('** instance id missing **')
-        elif clsname not in self.clslist:
+        class_name, obj_id = args.split()
+        if class_name not in self.clslist:
             print("** class doesn't exist **")
         else:
-            k = f"{clsname}.{objid}"
+            k = f"{class_name}.{obj_id}"
             obj = models.storage.all().get(k)
-            if not obj:
-                print('** no instance found **')
-            else:
+            if obj:
                 print(obj)
+            else:
+                print('** no instance found **')
 
     def do_destroy(self, arg):
         """Destroy instance based on id."""
-        clsname, objid = None, None
-        args = arg.split()
-        if len(args) > 0:
-            clsname = args[0].strip()
-        if len(args) > 1:
-            objid = args[1].strip()
-        if not clsname:
-            print('** class name missing **')
-        elif not objid:
-            print('** instance id missing **')
-        elif clsname not in self.clslist:
+        class_name, object_id = arg.split()
+        key = f"{class_name}.{object_id}"
+        if class_name not in self.clslist:
             print("** class doesn't exist **")
+        elif key not in models.storage.all():
+            print('** no instance found **')
         else:
-            k = f"{clsname}.{objid}"
-            obj = models.storage.all().get(k)
-            if not obj:
-                print('** no instance found **')
-            else:
-                del models.storage.all()[k]
-                models.storage.save()
+            del models.storage.all()[key]
+            models.storage.save()
 
-    def do_all(self, arg):
-        """Prints all instances based or not on the class name."""
-        if not arg:
-            print([str(v) for k, v in models.storage.all().items()])
-        else:
-            clsname = arg.strip()
-            if clsname not in self.clslist:
-                print("** class doesn't exist **")
-                return False
-            print([str(v) for k, v in models.storage.all().items()
-                   if type(v) is self.clslist[clsname]])
+    def do_all(self, clsname):
+        """Prints all instances based on class name."""
+        clsname = clsname.strip()
+        if clsname not in self.clslist:
+            return False
+        instances = [str(v) for v in models.storage.all().values()
+                     if isinstance(v, self.clslist[clsname])]
+        print(*instances, sep='\n')
 
     def do_update(self, arg):
-        """Updates an instance based on the class name and id."""
-        clsname, objid, attrname, attrval = None, None, None, None
-        updatetime = datetime.now()
-        args = shlex.split(arg)  # Use shlex for better argument parsing
-        if len(args) > 0:
-            clsname = args[0].strip()
-        if len(args) > 1:
-            objid = args[1].strip()
-        if len(args) > 2:
-            attrname = args[2].strip()
-        if len(args) > 3:
-            attrval = args
+        """Updates an instance using class name, id, attribute name, and value."""
+        clsname, objid, attrname, attrvalue = arg.split()
+        k = f"{clsname}.{objid}"
+        obj = models.storage.all().get(k)
+        if not obj:
+            print('** no instance found **')
+        else:
+            setattr(obj, attrname, attrvalue)
+            obj.updated_at = datetime.now()
+            models.storage.save()
