@@ -44,16 +44,17 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, args):
         """Show instance based on id."""
-        class_name, obj_id = args.split()
-        if class_name not in self.clslist:
-            print("** class doesn't exist **")
+        class_name, object_id = args.split()
+    class_name, obj_id = args.split()
+    if class_name not in self.clslist:
+        print("** class doesn't exist **")
+    else:
+        k = f"{class_name}.{obj_id}"
+        obj = models.storage.all().get(k)
+        if obj:
+            print(obj)
         else:
-            k = f"{class_name}.{obj_id}"
-            obj = models.storage.all().get(k)
-            if obj:
-                print(obj)
-            else:
-                print('** no instance found **')
+            print('** no instance found **')
 
     def do_destroy(self, arg):
         """Destroy instance based on id."""
@@ -67,23 +68,35 @@ class HBNBCommand(cmd.Cmd):
             del models.storage.all()[key]
             models.storage.save()
 
-    def do_all(self, clsname):
+    def do_all(self, class_name):
         """Prints all instances based on class name."""
-        clsname = clsname.strip()
-        if clsname not in self.clslist:
+        class_name = class_name.strip()
+        if class_name not in self._clslist:
             return False
-        instances = [str(v) for v in models.storage.all().values()
-                     if isinstance(v, self.clslist[clsname])]
+
+        instances = [str(instance) for instance in self._storage.all().values()
+                     if isinstance(instance, self._clslist[class_name])]
         print(*instances, sep='\n')
 
+    @property
+    def clslist(self):
+        """The class list."""
+        return self.__clslist
+
+    @property
+    def storage(self):
+        """The storage."""
+        return self.__storage
+
     def do_update(self, arg):
-        """Updates an instance using class name, id, attribute name, and value."""
-        clsname, objid, attrname, attrvalue = arg.split()
-        k = f"{clsname}.{objid}"
-        obj = models.storage.all().get(k)
-        if not obj:
-            print('** no instance found **')
-        else:
-            setattr(obj, attrname, attrvalue)
-            obj.updated_at = datetime.now()
-            models.storage.save()
+        """Updates an instance using class name, id, attribute name, value."""
+        class_name, object_id, attribute_name, attribute_value = arg.split()
+
+        obj = models.storage.all().get(f"{class_name}.{object_id}")
+        if obj is None:
+            print("** no instance found **")
+            return
+
+        setattr(obj, attribute_name, attribute_value)
+        obj.updated_at = datetime.now()
+        models.storage.save()
