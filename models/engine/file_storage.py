@@ -43,22 +43,17 @@ class FileStorage:
     def save(self):
         """
         Serializes the objects dictionary to a JSON file.
-        The JSON file path is specified by __file_path.
+        The JSON file path is specified by self.__file_path.
         """
-        obj_dict = {}
-        for key, obj in self.__objects.items():
-            obj_dict[key] = obj.to_dict()
+        data = {key: obj.to_dict() for key, obj in self.__objects.items()}
         with open(self.__file_path, "w") as file:
-            json.dump(obj_dict, file)
+            json.dump(data, file)
 
     def reload(self):
         """
         Deserializes the JSON file and updates the objects dictionary.
-        If the JSON file (__file_path) exists it reads the file
-        and loads objects.
-        If the file doesn't exist, it does nothing.
         """
-        clslist = {
+        classes = {
             'BaseModel': BaseModel,
             'State': State,
             'City': City,
@@ -73,6 +68,7 @@ class FileStorage:
                 obj_dict = json.load(file)
                 for key, value in obj_dict.items():
                     class_name, obj_id = key.split(".")
-                    self.__objects[key] = globals()[class_name](**value)
+                    self.__objects[key] = classes[class_name](**value)
         except FileNotFoundError:
+            # Handle case where file doesn't exist
             pass
