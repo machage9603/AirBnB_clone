@@ -4,8 +4,6 @@
 
 ![Structure](https://github.com/machage9603/AirBnB_clone/assets/139768288/4bbe8b1c-5258-4e35-8464-de6913bbdb1c)
 
-# AirBnB_clone - Console that's in charge of managing the models in a common AirBnB application.
-
 # Description of the project
 
 The initial phase of this project entails simulating an Airbnb-like application by developing a control system for the backend modules utilized on our web platform. This is accomplished through the implementation of a JSON-based database system, employing object-oriented programming (OOP) principles, Python data serialization and deserialization techniques, and command parsing mechanisms. The outcome is a robust local database that can be dynamically modified via predefined commands, offering a versatile and efficient solution for data management.
