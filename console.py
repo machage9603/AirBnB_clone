@@ -3,6 +3,7 @@
 """Defines the HBnB console"""
 
 import cmd
+from sys import argv
 from . import models
 from . models.base_model import BaseModel
 from . models.state import State
@@ -45,7 +46,7 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, args):
         """Show instance based on id."""
         class_name, object_id = args.split()
-    class_name, obj_id = args.split()
+    class_name, obj_id = arg.split()
     if class_name not in self.clslist:
         print("** class doesn't exist **")
     else:
