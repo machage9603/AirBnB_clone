@@ -4,34 +4,110 @@
 
 ![Structure](https://github.com/machage9603/AirBnB_clone/assets/139768288/4bbe8b1c-5258-4e35-8464-de6913bbdb1c)
 
-## **Project description**
+# AirBnB_clone - Console that's in charge of managing the models in a common AirBnB application.
 
-This repository contains....
+# Description of the project
 
-## **Installation**
+The initial phase of this project entails simulating an Airbnb-like application by developing a control system for the backend modules utilized on our web platform. This is accomplished through the implementation of a JSON-based database system, employing object-oriented programming (OOP) principles, Python data serialization and deserialization techniques, and command parsing mechanisms. The outcome is a robust local database that can be dynamically modified via predefined commands, offering a versatile and efficient solution for data management.
 
-When writing or executing these programs and projects, you will need to install:
+# Prerequisites
 
-## **Usage**
+Python3
 
-To access this project. Follow these steps:
+```
+sudo apt-get install python3
+```
 
-- Clone repository to your terminal
+# Installation
 
-       - git clone https://github.com/yourusername/AirBnB_clone
+To access the console use the following command:
 
-       - cd AirBnB_clone
+```
+git clone https://github.com/machage9603/AirBnB_clone.git; cd AirBnB_clone
+```
 
-- to be completed
+# Run
 
-        - cd
+Running the console use:
 
-- to be completed
+```
+python3 console.py
+```
 
-        -
-        -
+or
 
-I hope you enjoy the content.
+```
+./console.py
+```
+
+# Testing
+
+To execute unit tests to confirm that your changes haven't modify the functionality use:
+
+```
+python3 -m unittest discover tests
+```
+
+## How to start it
+
+### Interactive Mode
+
+```
+$ ./console.py
+```
+
+Now you are on interactive mode and you will see the prompt `(hbnb)`
+input a command:
+
+```
+(hbnb) create User
+```
+
+the id of the created model will be visible in the standard output, if you do:
+
+```
+(hbnb) show User [id]
+```
+
+All the attributes of the created model will be in your screen.
+
+use:
+
+```
+(hbnb) help
+```
+
+For a list of usable commands, to exit press Ctrl+D or type the command quit.
+
+### Non-Interactive Mode
+
+The console can also be used in non-interactive mode:
+
+```
+$ echo "create User" | ./console.py
+
+$ echo "help" | ./console.py
+```
+
+The program will create a file called: `file.json` whenever you create a new model, it'll be store in the top folder.
+
+## Examples
+
+Executing help command.
+
+![Help](https://github.com/daorejuela1/AirBnB_clone/blob/master/images/help.gif)
+
+Getting help for a command
+
+![Help update](https://github.com/daorejuela1/AirBnB_clone/blob/master/images/help%20update.gif)
+
+Creating a new user, showing the ID and updating the fields
+
+![Create & Update](https://github.com/daorejuela1/AirBnB_clone/blob/master/images/create%20user%20and%20update.gif)
+
+Creating a new basemodel, counting basemodel, delete and count again
+
+![Destroy](https://github.com/daorejuela1/AirBnB_clone/blob/master/images/destroy.gif)
 
 ## Author
 
