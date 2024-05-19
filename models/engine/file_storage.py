@@ -1,39 +1,63 @@
 #!/usr/bin/python3
-""" File storage class"""
+"""File Storage Class"""
 
 
 import json
 from ...models.base_model import BaseModel
-from ...models.user import User
 from ...models.state import State
 from ...models.city import City
 from ...models.amenity import Amenity
 from ...models.place import Place
 from ...models.review import Review
+from ...models.user import User
 
 
 class FileStorage:
-    """Serializes instances to a JSON file and deserializes JSON file to instances."""
+    """
+    This class provides a file storage module for serializing instances
+    to a JSON file and deserializing JSON files to instances.
+    """
+
     __file_path = "file.json"
     __objects = {}
 
     def all(self):
-        """Returns the dictionary __objects."""
-        return FileStorage.__objects
+        """
+        Returns the dictionary of all objects.
+
+        Returns:
+            dict: A dictionary containing all objects.
+        """
+        return self.__objects
 
     def new(self, obj):
-        """Sets in __objects the obj with key <obj class name>.id."""
-        key = f"{obj.__class__.__name__}.{obj.id}"
-        FileStorage.__objects[key] = obj
+        """
+        Adds a new object to the dictionary of objects.
+
+        Args:
+            obj: The object to be added.
+        """
+        class_name = obj.__class__.__name__
+        self.__objects[f"{class_name}.{obj.id}"] = obj
 
     def save(self):
-        """Serializes __objects to the JSON file (path: __file_path)."""
-        obj_dict = {key: obj.to_dict() for key, obj in FileStorage.__objects.items()}
-        with open(FileStorage.__file_path, 'w') as file:
+        """
+        Serializes the objects dictionary to a JSON file.
+        The JSON file path is specified by __file_path.
+        """
+        obj_dict = {}
+        for key, obj in self.__objects.items():
+            obj_dict[key] = obj.to_dict()
+        with open(self.__file_path, "w") as file:
             json.dump(obj_dict, file)
 
     def reload(self):
-        """Deserializes the JSON file to __objects (only if the JSON file (__file_path) exists)."""
+        """
+        Deserializes the JSON file and updates the objects dictionary.
+        If the JSON file (__file_path) exists it reads the file
+        and loads objects.
+        If the file doesn't exist, it does nothing.
+        """
         clslist = {
             'BaseModel': BaseModel,
             'State': State,
